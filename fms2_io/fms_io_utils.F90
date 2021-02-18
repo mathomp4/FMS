@@ -1,12 +1,32 @@
-!> @file
+!***********************************************************************
+!*                   GNU Lesser General Public License
+!*
+!* This file is part of the GFDL Flexible Modeling System (FMS).
+!*
+!* FMS is free software: you can redistribute it and/or modify it under
+!* the terms of the GNU Lesser General Public License as published by
+!* the Free Software Foundation, either version 3 of the License, or (at
+!* your option) any later version.
+!*
+!* FMS is distributed in the hope that it will be useful, but WITHOUT
+!* ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+!* FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+!* for more details.
+!*
+!* You should have received a copy of the GNU Lesser General Public
+!* License along with FMS.  If not, see <http://www.gnu.org/licenses/>.
+!***********************************************************************
 
-!> @brief Utility routines.
+!> @file
+!! @brief Utility routines.
+!! @email gfdl.climate.model.info@noaa.gov
 module fms_io_utils_mod
-use, intrinsic :: iso_fortran_env, only: error_unit, int32, int64, real32, real64
+use, intrinsic :: iso_fortran_env, only: error_unit
 #ifdef _OPENMP
 use omp_lib
 #endif
 use mpp_mod
+use platform_mod
 implicit none
 private
 
@@ -29,7 +49,7 @@ public :: open_check
 public :: string_compare
 public :: restart_filepath_mangle
 
-!> @brief A linked list of strings.
+!> @brief A linked list of strings
 type :: char_linked_list
   character(len=128) :: string
   type(char_linked_list), pointer :: head => null()
@@ -37,26 +57,26 @@ endtype char_linked_list
 
 
 interface allocate_array
-  module procedure allocate_array_int32_1d
-  module procedure allocate_array_int32_2d
-  module procedure allocate_array_int32_3d
-  module procedure allocate_array_int32_4d
-  module procedure allocate_array_int32_5d
-  module procedure allocate_array_int64_1d
-  module procedure allocate_array_int64_2d
-  module procedure allocate_array_int64_3d
-  module procedure allocate_array_int64_4d
-  module procedure allocate_array_int64_5d
-  module procedure allocate_array_real32_1d
-  module procedure allocate_array_real32_2d
-  module procedure allocate_array_real32_3d
-  module procedure allocate_array_real32_4d
-  module procedure allocate_array_real32_5d
-  module procedure allocate_array_real64_1d
-  module procedure allocate_array_real64_2d
-  module procedure allocate_array_real64_3d
-  module procedure allocate_array_real64_4d
-  module procedure allocate_array_real64_5d
+  module procedure allocate_array_i4_kind_1d
+  module procedure allocate_array_i4_kind_2d
+  module procedure allocate_array_i4_kind_3d
+  module procedure allocate_array_i4_kind_4d
+  module procedure allocate_array_i4_kind_5d
+  module procedure allocate_array_i8_kind_1d
+  module procedure allocate_array_i8_kind_2d
+  module procedure allocate_array_i8_kind_3d
+  module procedure allocate_array_i8_kind_4d
+  module procedure allocate_array_i8_kind_5d
+  module procedure allocate_array_r4_kind_1d
+  module procedure allocate_array_r4_kind_2d
+  module procedure allocate_array_r4_kind_3d
+  module procedure allocate_array_r4_kind_4d
+  module procedure allocate_array_r4_kind_5d
+  module procedure allocate_array_r8_kind_1d
+  module procedure allocate_array_r8_kind_2d
+  module procedure allocate_array_r8_kind_3d
+  module procedure allocate_array_r8_kind_4d
+  module procedure allocate_array_r8_kind_5d
   module procedure allocate_array_char_1d
   module procedure allocate_array_char_2d
   module procedure allocate_array_char_3d
@@ -67,50 +87,50 @@ end interface allocate_array
 
 
 interface put_array_section
-  module procedure put_array_section_int32_1d
-  module procedure put_array_section_int32_2d
-  module procedure put_array_section_int32_3d
-  module procedure put_array_section_int32_4d
-  module procedure put_array_section_int32_5d
-  module procedure put_array_section_int64_1d
-  module procedure put_array_section_int64_2d
-  module procedure put_array_section_int64_3d
-  module procedure put_array_section_int64_4d
-  module procedure put_array_section_int64_5d
-  module procedure put_array_section_real32_1d
-  module procedure put_array_section_real32_2d
-  module procedure put_array_section_real32_3d
-  module procedure put_array_section_real32_4d
-  module procedure put_array_section_real32_5d
-  module procedure put_array_section_real64_1d
-  module procedure put_array_section_real64_2d
-  module procedure put_array_section_real64_3d
-  module procedure put_array_section_real64_4d
-  module procedure put_array_section_real64_5d
+  module procedure put_array_section_i4_kind_1d
+  module procedure put_array_section_i4_kind_2d
+  module procedure put_array_section_i4_kind_3d
+  module procedure put_array_section_i4_kind_4d
+  module procedure put_array_section_i4_kind_5d
+  module procedure put_array_section_i8_kind_1d
+  module procedure put_array_section_i8_kind_2d
+  module procedure put_array_section_i8_kind_3d
+  module procedure put_array_section_i8_kind_4d
+  module procedure put_array_section_i8_kind_5d
+  module procedure put_array_section_r4_kind_1d
+  module procedure put_array_section_r4_kind_2d
+  module procedure put_array_section_r4_kind_3d
+  module procedure put_array_section_r4_kind_4d
+  module procedure put_array_section_r4_kind_5d
+  module procedure put_array_section_r8_kind_1d
+  module procedure put_array_section_r8_kind_2d
+  module procedure put_array_section_r8_kind_3d
+  module procedure put_array_section_r8_kind_4d
+  module procedure put_array_section_r8_kind_5d
 end interface put_array_section
 
 
 interface get_array_section
-  module procedure get_array_section_int32_1d
-  module procedure get_array_section_int32_2d
-  module procedure get_array_section_int32_3d
-  module procedure get_array_section_int32_4d
-  module procedure get_array_section_int32_5d
-  module procedure get_array_section_int64_1d
-  module procedure get_array_section_int64_2d
-  module procedure get_array_section_int64_3d
-  module procedure get_array_section_int64_4d
-  module procedure get_array_section_int64_5d
-  module procedure get_array_section_real32_1d
-  module procedure get_array_section_real32_2d
-  module procedure get_array_section_real32_3d
-  module procedure get_array_section_real32_4d
-  module procedure get_array_section_real32_5d
-  module procedure get_array_section_real64_1d
-  module procedure get_array_section_real64_2d
-  module procedure get_array_section_real64_3d
-  module procedure get_array_section_real64_4d
-  module procedure get_array_section_real64_5d
+  module procedure get_array_section_i4_kind_1d
+  module procedure get_array_section_i4_kind_2d
+  module procedure get_array_section_i4_kind_3d
+  module procedure get_array_section_i4_kind_4d
+  module procedure get_array_section_i4_kind_5d
+  module procedure get_array_section_i8_kind_1d
+  module procedure get_array_section_i8_kind_2d
+  module procedure get_array_section_i8_kind_3d
+  module procedure get_array_section_i8_kind_4d
+  module procedure get_array_section_i8_kind_5d
+  module procedure get_array_section_r4_kind_1d
+  module procedure get_array_section_r4_kind_2d
+  module procedure get_array_section_r4_kind_3d
+  module procedure get_array_section_r4_kind_4d
+  module procedure get_array_section_r4_kind_5d
+  module procedure get_array_section_r8_kind_1d
+  module procedure get_array_section_r8_kind_2d
+  module procedure get_array_section_r8_kind_3d
+  module procedure get_array_section_r8_kind_4d
+  module procedure get_array_section_r8_kind_5d
 end interface get_array_section
 
 
@@ -173,16 +193,31 @@ end subroutine openmp_thread_trap
 
 
 !> @brief Safely copy a string from one buffer to another.
-subroutine string_copy(dest, source)
+subroutine string_copy(dest, source, check_for_null)
   character(len=*), intent(inout) :: dest !< Destination string.
   character(len=*), intent(in) :: source !< Source string.
+  logical, intent(in), optional :: check_for_null !<Flag indicating to test for null character
 
-  if (len_trim(source) .gt. len(dest)) then
+  integer :: i
+  logical :: check_null
+
+  check_null = .false.
+  if (present(check_for_null)) check_null = check_for_null
+
+  i = 0
+  if (check_null) then
+     i = index(source, char(0)) - 1
+  endif
+
+  if (i < 1 ) i = len_trim(source)
+
+  if (len_trim(source(1:i)) .gt. len(dest)) then
     call error("The input destination string is not big enough to" &
                  //" to hold the input source string.")
   endif
   dest = ""
-  dest = adjustl(trim(source))
+  dest = adjustl(trim(source(1:i)))
+
 end subroutine string_copy
 
 
@@ -288,11 +323,11 @@ function has_domain_tile_string(string) &
 
   has_string = .false.
 ! Assigns i to the index where ".tile" starts
-  i = index(trim(string), ".tile", back=.true.) 
+  i = index(trim(string), ".tile", back=.true.)
   if (i .ne. 0) then
     l = len_trim(string)
-! Sets i to the index after .tile 
-    i = i + 5 
+! Sets i to the index after .tile
+    i = i + 5
     j = i
     do while (i .le. l)
 ! If the ith characters is a dot but i not equal to the index after .tile set has_string to true
@@ -359,7 +394,6 @@ end function has_io_domain_tile_string
 
 
 !> @brief Add the I/O domain tile id to an input filepath.
-!! 
 subroutine io_domain_tile_filepath_mangle(dest, source, io_domain_tile_id)
 
   character(len=*), intent(inout) :: dest !< Output filepath.
@@ -386,7 +420,6 @@ end function has_restart_string
 
 
 !> @brief Add ".res" to an input file path.
-!! 
 subroutine restart_filepath_mangle(dest, source)
 
   character(len=*), intent(inout) :: dest
@@ -413,7 +446,7 @@ subroutine open_check(flag, fname)
 
   logical, intent(in) :: flag
   character(len=*), intent(in), optional :: fname !< The file name
-  
+
   if (.not. flag) then
      if (present(fname)) then
           call mpp_error(fatal, "Error occured while opening file "//trim(fname))

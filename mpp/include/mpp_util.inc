@@ -20,9 +20,7 @@
 !* License along with FMS.  If not, see <http://www.gnu.org/licenses/>.
 !***********************************************************************
 
-#ifdef use_libSMA
-#include <mpp_util_sma.inc>
-#elif defined(use_libMPI)
+#if defined(use_libMPI)
 #include <mpp_util_mpi.inc>
 #else
 #include <mpp_util_nocomm.inc>
@@ -113,9 +111,6 @@
 !$OMP single
 !$      errunit = stderr()
 !$      write( errunit,'(/a/)' ) 'FATAL: STDLOG: is called inside a OMP parallel region'
-#ifdef sgi_mipspro
-!$      call TRACE_BACK_STACK_AND_PRINT()
-#endif
 #ifdef use_libMPI
 !$      call MPI_ABORT( MPI_COMM_WORLD, 1, error )
 #else
@@ -128,7 +123,7 @@
        write(this_pe,'(a,i6.6,a)') '.',pe,'.out'
        inquire( file=trim(configfile)//this_pe, opened=opened )
        if( opened )then
-          call FLUSH(log_unit)
+          FLUSH(log_unit)
        else
           log_unit=get_unit()
           open( unit=log_unit, status='UNKNOWN', file=trim(configfile)//this_pe, position='APPEND', err=10 )
@@ -137,7 +132,7 @@
     else
        inquire( unit=etc_unit, opened=opened )
        if( opened )then
-          call FLUSH(etc_unit)
+          FLUSH(etc_unit)
        else
           open( unit=etc_unit, status='UNKNOWN', file=trim(etcfile), position='APPEND', err=11 )
        end if
@@ -439,17 +434,6 @@ end function rarray_to_char
   end function mpp_pe
 
   !#####################################################################
-  function mpp_node()
-!calls mld_id from threadloc.c on sgi, which returns the hardware node ID from /hw/nodenum/...
-    integer :: mpp_node
-    integer :: mld_id
-
-    if( .NOT.module_is_initialized )call mpp_error( FATAL, 'MPP_NODE: You must first call mpp_init.' )
-    mpp_node = mld_id()
-    return
-  end function mpp_node
-
-  !#####################################################################
   ! <FUNCTION NAME="mpp_npes">
   !  <OVERVIEW>
   !    Returns processor count for current pelist.
@@ -522,9 +506,6 @@ end function rarray_to_char
   !    together for the <TT>MPI_COMM_CREATE</TT> call. The parent is
   !    typically <TT>MPI_COMM_WORLD</TT>, though it could also be a subset
   !    that includes all PEs in <TT>pelist</TT>.
-  !
-  !    The restriction does not apply to SMA but to have uniform code, you
-  !    may as well call it.
   !
   !    This call implies synchronization across the PEs in the current
   !    pelist, of which <TT>pelist</TT> is a subset.
@@ -752,6 +733,7 @@ end function rarray_to_char
     integer                       :: i
 
     clocks(id)%name = name
+    clocks(id)%hits = 0
     clocks(id)%tick = 0
     clocks(id)%total_ticks = 0
     clocks(id)%sync_on_begin = .FALSE.
@@ -864,6 +846,7 @@ end function rarray_to_char
       current_clock = id
     endif
     call SYSTEM_CLOCK( clocks(id)%tick )
+    clocks(id)%hits = clocks(id)%hits + 1
     clocks(id)%is_on = .true.
 !$OMP END MASTER
     return
@@ -872,7 +855,7 @@ end function rarray_to_char
   !#####################################################################
   subroutine mpp_clock_end(id)
     integer, intent(in) :: id
-    integer(LONG_KIND)  :: delta
+    integer(i8_kind)  :: delta
     integer             :: errunit
 
     if( .NOT.module_is_initialized )call mpp_error( FATAL, 'MPP_CLOCK_END: You must first call mpp_init.' )
@@ -924,7 +907,7 @@ end function rarray_to_char
     integer,           intent(in) :: event_id
     integer, intent(in), optional :: bytes
     integer                       :: n
-    integer(LONG_KIND)            :: delta
+    integer(i8_kind)            :: delta
     integer                       :: errunit
 
     if( .not. mpp_record_timing_data )return
@@ -1255,17 +1238,10 @@ end function rarray_to_char
        uppercase = cs  ! simply return input blank string
     else
     uppercase = cs(1:tlen)
-! #etd
-#if defined _CRAYX1
     do k=1, tlen
-         if(uppercase(k:k) >= "a" .and. uppercase(k:k) <= 'z') uppercase(k:k) = achar(ichar(uppercase(k:k))+co)
-       end do
-#else
-      do k=1, tlen
        ca => uppercase(k:k)
        if(ca >= "a" .and. ca <= "z") ca = achar(ichar(ca)+co)
     enddo
-#endif
     endif
   end function uppercase
 
@@ -1283,17 +1259,10 @@ end function rarray_to_char
        lowercase = cs  ! simply return input blank string
     else
     lowercase = cs(1:tlen)
-! #etd
-#if defined _CRAYX1
-       do k=1, tlen
-         if(lowercase(k:k) >= "A" .and. lowercase(k:k) <= 'Z') lowercase(k:k) = achar(ichar(lowercase(k:k))+co)
-       end do
-#else
     do k=1, tlen
        ca => lowercase(k:k)
        if(ca >= "A" .and. ca <= "Z") ca = achar(ichar(ca)+co)
     enddo
-#endif
     endif
   end function lowercase
 

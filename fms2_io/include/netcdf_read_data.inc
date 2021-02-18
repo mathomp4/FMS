@@ -1,3 +1,22 @@
+!***********************************************************************
+!*                   GNU Lesser General Public License
+!*
+!* This file is part of the GFDL Flexible Modeling System (FMS).
+!*
+!* FMS is free software: you can redistribute it and/or modify it under
+!* the terms of the GNU Lesser General Public License as published by
+!* the Free Software Foundation, either version 3 of the License, or (at
+!* your option) any later version.
+!*
+!* FMS is distributed in the hope that it will be useful, but WITHOUT
+!* ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+!* FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+!* for more details.
+!*
+!* You should have received a copy of the GNU Lesser General Public
+!* License along with FMS.  If not, see <http://www.gnu.org/licenses/>.
+!***********************************************************************
+
 !> @brief Read in data from a variable in a netcdf file.
 subroutine netcdf_read_data_0d(fileobj, variable_name, buf, unlim_dim_level, &
                                corner, broadcast)
@@ -44,13 +63,13 @@ subroutine netcdf_read_data_0d(fileobj, variable_name, buf, unlim_dim_level, &
   if (fileobj%is_root) then
     varid = get_variable_id(fileobj%ncid, trim(variable_name))
     select type(buf)
-      type is (integer(kind=int32))
+      type is (integer(kind=i4_kind))
         err = nf90_get_var(fileobj%ncid, varid, buf, start=c)
-      type is (integer(kind=int64))
+      type is (integer(kind=i8_kind))
         err = nf90_get_var(fileobj%ncid, varid, buf, start=c)
-      type is (real(kind=real32))
+      type is (real(kind=r4_kind))
         err = nf90_get_var(fileobj%ncid, varid, buf, start=c)
-      type is (real(kind=real64))
+      type is (real(kind=r8_kind))
         err = nf90_get_var(fileobj%ncid, varid, buf, start=c)
       type is (character(len=*))
         start(:) = 1
@@ -87,13 +106,13 @@ subroutine netcdf_read_data_0d(fileobj, variable_name, buf, unlim_dim_level, &
   endif
   if (bcast) then
     select type(buf)
-      type is (integer(kind=int32))
+      type is (integer(kind=i4_kind))
         call mpp_broadcast(buf, fileobj%io_root, pelist=fileobj%pelist)
-      type is (integer(kind=int64))
+      type is (integer(kind=i8_kind))
         call mpp_broadcast(buf, fileobj%io_root, pelist=fileobj%pelist)
-      type is (real(kind=real32))
+      type is (real(kind=r4_kind))
         call mpp_broadcast(buf, fileobj%io_root, pelist=fileobj%pelist)
-      type is (real(kind=real64))
+      type is (real(kind=r8_kind))
         call mpp_broadcast(buf, fileobj%io_root, pelist=fileobj%pelist)
       type is (character(len=*))
         call string_copy(buf1d(1), buf)
@@ -171,13 +190,13 @@ subroutine netcdf_read_data_1d(fileobj, variable_name, buf, unlim_dim_level, &
   if (fileobj%is_root) then
     varid = get_variable_id(fileobj%ncid, trim(variable_name))
     select type(buf)
-      type is (integer(kind=int32))
+      type is (integer(kind=i4_kind))
         err = nf90_get_var(fileobj%ncid, varid, buf, start=c, count=e)
-      type is (integer(kind=int64))
+      type is (integer(kind=i8_kind))
         err = nf90_get_var(fileobj%ncid, varid, buf, start=c, count=e)
-      type is (real(kind=real32))
+      type is (real(kind=r4_kind))
         err = nf90_get_var(fileobj%ncid, varid, buf, start=c, count=e)
-      type is (real(kind=real64))
+      type is (real(kind=r8_kind))
         err = nf90_get_var(fileobj%ncid, varid, buf, start=c, count=e)
       type is (character(len=*))
         ndims = get_variable_num_dimensions(fileobj, variable_name, broadcast=.false.)
@@ -215,13 +234,13 @@ subroutine netcdf_read_data_1d(fileobj, variable_name, buf, unlim_dim_level, &
   endif
   if (bcast) then
     select type(buf)
-      type is (integer(kind=int32))
+      type is (integer(kind=i4_kind))
         call mpp_broadcast(buf, size(buf), fileobj%io_root, pelist=fileobj%pelist)
-      type is (integer(kind=int64))
+      type is (integer(kind=i8_kind))
         call mpp_broadcast(buf, size(buf), fileobj%io_root, pelist=fileobj%pelist)
-      type is (real(kind=real32))
+      type is (real(kind=r4_kind))
         call mpp_broadcast(buf, size(buf), fileobj%io_root, pelist=fileobj%pelist)
-      type is (real(kind=real64))
+      type is (real(kind=r8_kind))
         call mpp_broadcast(buf, size(buf), fileobj%io_root, pelist=fileobj%pelist)
       type is (character(len=*))
         call mpp_broadcast(buf, len(buf(1)), fileobj%io_root, pelist=fileobj%pelist)
@@ -290,13 +309,13 @@ subroutine netcdf_read_data_2d(fileobj, variable_name, buf, unlim_dim_level, &
   if (fileobj%is_root) then
     varid = get_variable_id(fileobj%ncid, trim(variable_name))
     select type(buf)
-      type is (integer(kind=int32))
+      type is (integer(kind=i4_kind))
         err = nf90_get_var(fileobj%ncid, varid, buf, start=c, count=e)
-      type is (integer(kind=int64))
+      type is (integer(kind=i8_kind))
         err = nf90_get_var(fileobj%ncid, varid, buf, start=c, count=e)
-      type is (real(kind=real32))
+      type is (real(kind=r4_kind))
         err = nf90_get_var(fileobj%ncid, varid, buf, start=c, count=e)
-      type is (real(kind=real64))
+      type is (real(kind=r8_kind))
         err = nf90_get_var(fileobj%ncid, varid, buf, start=c, count=e)
       class default
         call error("unsupported type.")
@@ -305,13 +324,13 @@ subroutine netcdf_read_data_2d(fileobj, variable_name, buf, unlim_dim_level, &
   endif
   if (bcast) then
     select type(buf)
-      type is (integer(kind=int32))
+      type is (integer(kind=i4_kind))
         call mpp_broadcast(buf, size(buf), fileobj%io_root, pelist=fileobj%pelist)
-      type is (integer(kind=int64))
+      type is (integer(kind=i8_kind))
         call mpp_broadcast(buf, size(buf), fileobj%io_root, pelist=fileobj%pelist)
-      type is (real(kind=real32))
+      type is (real(kind=r4_kind))
         call mpp_broadcast(buf, size(buf), fileobj%io_root, pelist=fileobj%pelist)
-      type is (real(kind=real64))
+      type is (real(kind=r8_kind))
         call mpp_broadcast(buf, size(buf), fileobj%io_root, pelist=fileobj%pelist)
       class default
         call error("unsupported type.")
@@ -378,13 +397,13 @@ subroutine netcdf_read_data_3d(fileobj, variable_name, buf, unlim_dim_level, &
   if (fileobj%is_root) then
     varid = get_variable_id(fileobj%ncid, trim(variable_name))
     select type(buf)
-      type is (integer(kind=int32))
+      type is (integer(kind=i4_kind))
         err = nf90_get_var(fileobj%ncid, varid, buf, start=c, count=e)
-      type is (integer(kind=int64))
+      type is (integer(kind=i8_kind))
         err = nf90_get_var(fileobj%ncid, varid, buf, start=c, count=e)
-      type is (real(kind=real32))
+      type is (real(kind=r4_kind))
         err = nf90_get_var(fileobj%ncid, varid, buf, start=c, count=e)
-      type is (real(kind=real64))
+      type is (real(kind=r8_kind))
         err = nf90_get_var(fileobj%ncid, varid, buf, start=c, count=e)
       class default
         call error("unsupported type.")
@@ -393,13 +412,13 @@ subroutine netcdf_read_data_3d(fileobj, variable_name, buf, unlim_dim_level, &
   endif
   if (bcast) then
     select type(buf)
-      type is (integer(kind=int32))
+      type is (integer(kind=i4_kind))
         call mpp_broadcast(buf, size(buf), fileobj%io_root, pelist=fileobj%pelist)
-      type is (integer(kind=int64))
+      type is (integer(kind=i8_kind))
         call mpp_broadcast(buf, size(buf), fileobj%io_root, pelist=fileobj%pelist)
-      type is (real(kind=real32))
+      type is (real(kind=r4_kind))
         call mpp_broadcast(buf, size(buf), fileobj%io_root, pelist=fileobj%pelist)
-      type is (real(kind=real64))
+      type is (real(kind=r8_kind))
         call mpp_broadcast(buf, size(buf), fileobj%io_root, pelist=fileobj%pelist)
       class default
         call error("unsupported type.")
@@ -466,13 +485,13 @@ subroutine netcdf_read_data_4d(fileobj, variable_name, buf, unlim_dim_level, &
   if (fileobj%is_root) then
     varid = get_variable_id(fileobj%ncid, trim(variable_name))
     select type(buf)
-      type is (integer(kind=int32))
+      type is (integer(kind=i4_kind))
         err = nf90_get_var(fileobj%ncid, varid, buf, start=c, count=e)
-      type is (integer(kind=int64))
+      type is (integer(kind=i8_kind))
         err = nf90_get_var(fileobj%ncid, varid, buf, start=c, count=e)
-      type is (real(kind=real32))
+      type is (real(kind=r4_kind))
         err = nf90_get_var(fileobj%ncid, varid, buf, start=c, count=e)
-      type is (real(kind=real64))
+      type is (real(kind=r8_kind))
         err = nf90_get_var(fileobj%ncid, varid, buf, start=c, count=e)
       class default
         call error("unsupported type.")
@@ -481,13 +500,13 @@ subroutine netcdf_read_data_4d(fileobj, variable_name, buf, unlim_dim_level, &
   endif
   if (bcast) then
     select type(buf)
-      type is (integer(kind=int32))
+      type is (integer(kind=i4_kind))
         call mpp_broadcast(buf, size(buf), fileobj%io_root, pelist=fileobj%pelist)
-      type is (integer(kind=int64))
+      type is (integer(kind=i8_kind))
         call mpp_broadcast(buf, size(buf), fileobj%io_root, pelist=fileobj%pelist)
-      type is (real(kind=real32))
+      type is (real(kind=r4_kind))
         call mpp_broadcast(buf, size(buf), fileobj%io_root, pelist=fileobj%pelist)
-      type is (real(kind=real64))
+      type is (real(kind=r8_kind))
         call mpp_broadcast(buf, size(buf), fileobj%io_root, pelist=fileobj%pelist)
       class default
         call error("unsupported type.")
@@ -554,13 +573,13 @@ subroutine netcdf_read_data_5d(fileobj, variable_name, buf, unlim_dim_level, &
   if (fileobj%is_root) then
     varid = get_variable_id(fileobj%ncid, trim(variable_name))
     select type(buf)
-      type is (integer(kind=int32))
+      type is (integer(kind=i4_kind))
         err = nf90_get_var(fileobj%ncid, varid, buf, start=c, count=e)
-      type is (integer(kind=int64))
+      type is (integer(kind=i8_kind))
         err = nf90_get_var(fileobj%ncid, varid, buf, start=c, count=e)
-      type is (real(kind=real32))
+      type is (real(kind=r4_kind))
         err = nf90_get_var(fileobj%ncid, varid, buf, start=c, count=e)
-      type is (real(kind=real64))
+      type is (real(kind=r8_kind))
         err = nf90_get_var(fileobj%ncid, varid, buf, start=c, count=e)
       class default
         call error("unsupported type.")
@@ -569,13 +588,13 @@ subroutine netcdf_read_data_5d(fileobj, variable_name, buf, unlim_dim_level, &
   endif
   if (bcast) then
     select type(buf)
-      type is (integer(kind=int32))
+      type is (integer(kind=i4_kind))
         call mpp_broadcast(buf, size(buf), fileobj%io_root, pelist=fileobj%pelist)
-      type is (integer(kind=int64))
+      type is (integer(kind=i8_kind))
         call mpp_broadcast(buf, size(buf), fileobj%io_root, pelist=fileobj%pelist)
-      type is (real(kind=real32))
+      type is (real(kind=r4_kind))
         call mpp_broadcast(buf, size(buf), fileobj%io_root, pelist=fileobj%pelist)
-      type is (real(kind=real64))
+      type is (real(kind=r8_kind))
         call mpp_broadcast(buf, size(buf), fileobj%io_root, pelist=fileobj%pelist)
       class default
         call error("unsupported type.")

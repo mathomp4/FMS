@@ -1,3 +1,22 @@
+!***********************************************************************
+!*                   GNU Lesser General Public License
+!*
+!* This file is part of the GFDL Flexible Modeling System (FMS).
+!*
+!* FMS is free software: you can redistribute it and/or modify it under
+!* the terms of the GNU Lesser General Public License as published by
+!* the Free Software Foundation, either version 3 of the License, or (at
+!* your option) any later version.
+!*
+!* FMS is distributed in the hope that it will be useful, but WITHOUT
+!* ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+!* FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+!* for more details.
+!*
+!* You should have received a copy of the GNU Lesser General Public
+!* License along with FMS.  If not, see <http://www.gnu.org/licenses/>.
+!***********************************************************************
+
 !> @brief Write data to a variable in a netcdf file.
 subroutine netcdf_write_data_0d(fileobj, variable_name, variable_data, unlim_dim_level, &
                                 corner)
@@ -38,13 +57,13 @@ subroutine netcdf_write_data_0d(fileobj, variable_name, variable_data, unlim_dim
     call set_netcdf_mode(fileobj%ncid, data_mode)
     varid = get_variable_id(fileobj%ncid, trim(variable_name))
     select type(variable_data)
-      type is (integer(kind=int32))
+      type is (integer(kind=i4_kind))
         err = nf90_put_var(fileobj%ncid, varid, variable_data, start=c)
-      type is (integer(kind=int64))
+      type is (integer(kind=i8_kind))
         err = nf90_put_var(fileobj%ncid, varid, variable_data, start=c)
-      type is (real(kind=real32))
+      type is (real(kind=r4_kind))
         err = nf90_put_var(fileobj%ncid, varid, variable_data, start=c)
-      type is (real(kind=real64))
+      type is (real(kind=r8_kind))
         err = nf90_put_var(fileobj%ncid, varid, variable_data, start=c)
       type is (character(len=*))
         ndims = get_variable_num_dimensions(fileobj, variable_name, broadcast=.false.)
@@ -129,13 +148,13 @@ subroutine netcdf_write_data_1d(fileobj, variable_name, variable_data, unlim_dim
     call set_netcdf_mode(fileobj%ncid, data_mode)
     varid = get_variable_id(fileobj%ncid, trim(variable_name))
     select type(variable_data)
-      type is (integer(kind=int32))
+      type is (integer(kind=i4_kind))
         err = nf90_put_var(fileobj%ncid, varid, variable_data, start=c, count=e)
-      type is (integer(kind=int64))
+      type is (integer(kind=i8_kind))
         err = nf90_put_var(fileobj%ncid, varid, variable_data, start=c, count=e)
-      type is (real(kind=real32))
+      type is (real(kind=r4_kind))
         err = nf90_put_var(fileobj%ncid, varid, variable_data, start=c, count=e)
-      type is (real(kind=real64))
+      type is (real(kind=r8_kind))
         err = nf90_put_var(fileobj%ncid, varid, variable_data, start=c, count=e)
       type is (character(len=*))
         ndims = get_variable_num_dimensions(fileobj, variable_name, broadcast=.false.)
@@ -218,13 +237,13 @@ subroutine netcdf_write_data_2d(fileobj, variable_name, variable_data, unlim_dim
     call set_netcdf_mode(fileobj%ncid, data_mode)
     varid = get_variable_id(fileobj%ncid, trim(variable_name))
     select type(variable_data)
-      type is (integer(kind=int32))
+      type is (integer(kind=i4_kind))
         err = nf90_put_var(fileobj%ncid, varid, variable_data, start=c, count=e)
-      type is (integer(kind=int64))
+      type is (integer(kind=i8_kind))
         err = nf90_put_var(fileobj%ncid, varid, variable_data, start=c, count=e)
-      type is (real(kind=real32))
+      type is (real(kind=r4_kind))
         err = nf90_put_var(fileobj%ncid, varid, variable_data, start=c, count=e)
-      type is (real(kind=real64))
+      type is (real(kind=r8_kind))
         err = nf90_put_var(fileobj%ncid, varid, variable_data, start=c ,count=e)
       class default
         call error("unsupported type.")
@@ -280,13 +299,13 @@ subroutine netcdf_write_data_3d(fileobj, variable_name, variable_data, unlim_dim
     call set_netcdf_mode(fileobj%ncid, data_mode)
     varid = get_variable_id(fileobj%ncid, trim(variable_name))
     select type(variable_data)
-      type is (integer(kind=int32))
+      type is (integer(kind=i4_kind))
         err = nf90_put_var(fileobj%ncid, varid, variable_data, start=c, count=e)
-      type is (integer(kind=int64))
+      type is (integer(kind=i8_kind))
         err = nf90_put_var(fileobj%ncid, varid, variable_data, start=c, count=e)
-      type is (real(kind=real32))
+      type is (real(kind=r4_kind))
         err = nf90_put_var(fileobj%ncid, varid, variable_data, start=c, count=e)
-      type is (real(kind=real64))
+      type is (real(kind=r8_kind))
         err = nf90_put_var(fileobj%ncid, varid, variable_data, start=c, count=e)
       class default
         call error("unsupported type.")
@@ -340,13 +359,13 @@ subroutine netcdf_write_data_4d(fileobj, variable_name, variable_data, unlim_dim
     call set_netcdf_mode(fileobj%ncid, data_mode)
     varid = get_variable_id(fileobj%ncid, trim(variable_name))
     select type(variable_data)
-      type is (integer(kind=int32))
+      type is (integer(kind=i4_kind))
         err = nf90_put_var(fileobj%ncid, varid, variable_data, start=c, count=e)
-      type is (integer(kind=int64))
+      type is (integer(kind=i8_kind))
         err = nf90_put_var(fileobj%ncid, varid, variable_data, start=c, count=e)
-      type is (real(kind=real32))
+      type is (real(kind=r4_kind))
         err = nf90_put_var(fileobj%ncid, varid, variable_data, start=c, count=e)
-      type is (real(kind=real64))
+      type is (real(kind=r8_kind))
         err = nf90_put_var(fileobj%ncid, varid, variable_data, start=c, count=e)
       class default
         call error("unsupported type.")
@@ -403,13 +422,13 @@ subroutine netcdf_write_data_5d(fileobj, variable_name, variable_data, unlim_dim
     call set_netcdf_mode(fileobj%ncid, data_mode)
     varid = get_variable_id(fileobj%ncid, trim(variable_name))
     select type(variable_data)
-      type is (integer(kind=int32))
+      type is (integer(kind=i4_kind))
         err = nf90_put_var(fileobj%ncid, varid, variable_data, start=c, count=e)
-      type is (integer(kind=int64))
+      type is (integer(kind=i8_kind))
         err = nf90_put_var(fileobj%ncid, varid, variable_data, start=c, count=e)
-      type is (real(kind=real32))
+      type is (real(kind=r4_kind))
         err = nf90_put_var(fileobj%ncid, varid, variable_data, start=c, count=e)
-      type is (real(kind=real64))
+      type is (real(kind=r8_kind))
         err = nf90_put_var(fileobj%ncid, varid, variable_data, start=c, count=e)
       class default
         call error("unsupported type.")
